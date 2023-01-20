@@ -1,5 +1,7 @@
 import random
 
+greeting_emoji = ["👋", "🙋‍♂️", "✋", "🙏", "🙌"]
+
 greeting_type = ["Hello", "Sup", "Howdy", "Hi", "Hola", "Greetings", "Namaste", "Hey"]
 
 greeting_hope = [
@@ -11,4 +13,4 @@ greeting_hope = [
 
 
 def get_greeting(name):
-    return f"{random.choice(greeting_type)}, {name}. {random.choice(greeting_hope)}"
+    return f"{random.choice(greeting_emoji)} {random.choice(greeting_type)}, {name}. {random.choice(greeting_hope)}"

@@ -45,11 +45,16 @@ async def on_message(message):
     if message.author == bot.user:
         return
     messageContent = message.content.strip().lower()
-    # print(message.author, message.content, message.channel.id)
+
     if messageContent == "hello there":
         await message.channel.send("General Kenobi")
+
     elif bool(re.search(r"\b(hel+o+|hey+|hi+)\b", messageContent)):
         await message.channel.send(get_greeting(message.author.mention))
+
+    elif bool(re.search(r"\b(good *night|gn)\b", messageContent)):
+        await message.channel.send(f"✨Sweet dreams✨, {message.author.mention}")
+
     await bot.process_commands(message)
 
 
