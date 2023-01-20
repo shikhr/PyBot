@@ -8,6 +8,7 @@ load_dotenv()
 
 from greeting import get_greeting
 import responses
+from create_meme import gen_meme_url
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 
@@ -23,8 +24,9 @@ async def on_ready():
 
 
 @bot.command()
-async def meme(ctx):
-    await ctx.send("meem")
+async def cmeme(ctx, *args):
+    gen_url = gen_meme_url(args)
+    await ctx.send(gen_url)
 
 
 @bot.command()
