@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from greeting import get_greeting
+import responses
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 
@@ -28,7 +29,12 @@ async def meme(ctx):
 
 @bot.command()
 async def slap(ctx, member: discord.Member):
-    slapped_whom = "themselves" if ctx.author == member else member.mention
+    if member == bot.user:
+        await ctx.send(
+            responses.u1_throws_u2(u1=bot.user.mention, u2=ctx.message.author.mention)
+        )
+        return
+    slapped_whom = "themselves" if ctx.message.author == member else member.mention
     await ctx.send(f"{ctx.message.author.mention} slapped {slapped_whom}")
 
 
