@@ -26,6 +26,12 @@ async def meme(ctx):
     await ctx.send("meem")
 
 
+@bot.command()
+async def slap(ctx, member: discord.Member):
+    slapped_whom = "themselves" if ctx.author == member else member.mention
+    await ctx.send(f"{ctx.message.author.mention} slapped {slapped_whom}")
+
+
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
@@ -35,12 +41,13 @@ async def on_message(message):
     if messageContent == "hello there":
         await message.channel.send("General Kenobi")
     elif bool(re.search(r"\b(hel+o+|hey+|hi+)\b", messageContent)):
-        await message.channel.send(get_greeting(message.author))
+        await message.channel.send(get_greeting(message.author.mention))
     await bot.process_commands(message)
 
 
 @bot.event
 async def on_command_error(ctx, error):
+    print(error)
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("You're missing a required argument.¯\_(ツ)_/¯")
         return
