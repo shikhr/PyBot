@@ -1,5 +1,6 @@
 import os
 import re
+import asyncio
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -8,7 +9,7 @@ load_dotenv()
 
 from greeting import get_greeting
 import responses
-from create_meme import gen_meme_url
+
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 
@@ -17,16 +18,12 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix=".", intents=intents)
 
+bot.remove_command("help")
+
 
 @bot.event
 async def on_ready():
     print(f"{bot.user} has connected to Discord!")
-
-
-@bot.command()
-async def cmeme(ctx, *args):
-    gen_url = gen_meme_url(args)
-    await ctx.send(gen_url)
 
 
 @bot.command()
@@ -61,13 +58,26 @@ async def on_message(message):
 @bot.event
 async def on_command_error(ctx, error):
     print(error)
+    if isinstance(error, commands.CommandNotFound):
+        return
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("You're missing a required argument.¯\_(ツ)_/¯")
         return
-    if isinstance(error, commands.CommandNotFound):
-        await ctx.send("That's not a valid command!")
-        return
     await ctx.send("Couldn't run the command. (> <)")
 
+
+async def load_cogs():
+    for filename in os.listdir("./cogs"):
+        if filename.endswith(".py"):
+            extension = filename[:-3]
+            try:
+                await bot.load_extension(f"cogs.{extension}")
+                print(f"Loaded extension '{extension}'")
+            except Exception as e:
+                exception = f"{type(e).__name__}: {e}"
+                print(f"Failed to load extension {extension}\n{exception}")
+
+
+asyncio.run(load_cogs())
 
 bot.run(TOKEN)
